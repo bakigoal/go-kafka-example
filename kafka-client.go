@@ -8,7 +8,11 @@ import (
 )
 
 func main() {
-	go consumer.Listen()
+	go produceMessages()
+	consumer.Listen()
+}
+
+func produceMessages() {
 	for {
 		producer.Produce(model.Message{
 			MdmCode: "123",
@@ -17,6 +21,6 @@ func main() {
 				{MdmCode: "321"},
 			},
 		})
-		time.Sleep(5 * time.Second)
+		time.Sleep(30 * time.Second)
 	}
 }
