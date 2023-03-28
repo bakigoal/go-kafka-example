@@ -34,11 +34,12 @@ func Listen() {
 }
 
 func subscribeToTopic(topic string) *kafka.Consumer {
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+	config := kafka.ConfigMap{
 		"bootstrap.servers": bootstrapServers,
 		"group.id":          groupId,
 		"auto.offset.reset": offsetReset,
-	})
+	}
+	c, err := kafka.NewConsumer(&config)
 
 	if err != nil {
 		panic(any(err))

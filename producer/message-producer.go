@@ -24,7 +24,10 @@ func Produce(message string) {
 }
 
 func createProducer(servers string) *kafka.Producer {
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": servers})
+	config := kafka.ConfigMap{
+		"bootstrap.servers": servers,
+	}
+	p, err := kafka.NewProducer(&config)
 	if err != nil {
 		panic(any(err))
 	}
