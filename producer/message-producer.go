@@ -3,20 +3,21 @@ package producer
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"kafka-klient/model"
 )
 
 const (
 	bootstrapServers = "localhost"
-	topic            = "go-topic"
+	topic            = "golang-topic"
 )
 
-func Produce(message string) {
+func Produce(message model.Message) {
 	p := createProducer(bootstrapServers)
 	defer p.Close()
 	t := topic
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &t, Partition: kafka.PartitionAny},
-		Value:          []byte(message),
+		Value:          message.ToByteArray(),
 	}, nil)
 
 	// Wait for message deliveries before shutting down

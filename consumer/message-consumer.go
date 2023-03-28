@@ -3,18 +3,20 @@ package consumer
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"kafka-klient/model"
 	"time"
 )
 
 const (
 	bootstrapServers = "localhost"
-	topic            = "go-topic"
+	topic            = "golang-topic"
 	groupId          = "my-group"
 	offsetReset      = "earliest"
 )
 
 func Listen() {
 	c := subscribeToTopic(topic)
+	defer c.Close()
 
 	// A signal handler or similar could be used to set this to false to break the loop.
 	run := true
@@ -22,6 +24,7 @@ func Listen() {
 		msg, err := c.ReadMessage(time.Second)
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+			go handleMessage(model.FromByteArray(msg.Value))
 		} else if !err.(kafka.Error).IsTimeout() {
 			// The client will automatically try to recover from all errors.
 			// Timeout is not considered an error because it is raised by
@@ -29,8 +32,10 @@ func Listen() {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
+}
 
-	c.Close()
+func handleMessage(message model.Message) {
+	fmt.Printf("Handling Message: %q \n", message)
 }
 
 func subscribeToTopic(topic string) *kafka.Consumer {
