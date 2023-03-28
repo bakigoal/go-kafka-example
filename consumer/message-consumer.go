@@ -9,6 +9,8 @@ import (
 const (
 	bootstrapServers = "localhost"
 	topic            = "go-topic"
+	groupId          = "my-group"
+	offsetReset      = "earliest"
 )
 
 func Listen() {
@@ -33,9 +35,9 @@ func Listen() {
 
 func subscribeToTopic(topic string) *kafka.Consumer {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost",
-		"group.id":          "myGroup",
-		"auto.offset.reset": "earliest",
+		"bootstrap.servers": bootstrapServers,
+		"group.id":          groupId,
+		"auto.offset.reset": offsetReset,
 	})
 
 	if err != nil {
